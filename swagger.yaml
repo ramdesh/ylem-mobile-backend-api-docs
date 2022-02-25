@@ -93,12 +93,18 @@ paths:
       - Bearer: []
       
 
-  /balances:
+  /users/{userId}/balance:
     get:
       tags:
       - FIAT
-      summary: Retrieve FIAT token balance for user. User is determined through auth token validation.
+      summary: Retrieve FIAT token balance for user.
       description: Retrieve FIAT token balance for user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         201:
           description: User FIAT balance.
