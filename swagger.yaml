@@ -158,7 +158,7 @@ paths:
     get:
       tags:
       - FIAT
-      summary: Retrieve FIAT token balance for user.
+      summary: Retrieve FIAT token balance for user. User is determined through auth token validation.
       description: Retrieve FIAT token balance for user.
       responses:
         201:
