@@ -135,6 +135,12 @@ components:
     GenOrLoadForecast:
       type: object
       properties:
+        forecastType:
+          type: string
+          description: Forecast type.
+          enum:
+           - GEN
+           - LOAD
         timeslot:
           type: string
           description: Timeslot the energy is being generated for/used in.
@@ -143,6 +149,12 @@ components:
     GenOrLoadForecastResponse:
       type: object
       properties:
+        forecastType:
+          type: string
+          description: Forecast type.
+          enum:
+           - GEN
+           - LOAD
         forecastId:
           type: string
           description: Forecast ID.
