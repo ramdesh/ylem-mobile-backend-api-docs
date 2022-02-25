@@ -30,12 +30,12 @@ paths:
         500:
           description: Backend error.
           content: {}
-  /gen-forecasts:
+  /forecasts:
     post:
       tags:
       - Forecasting
-      summary: Sends a energy generation forecast.
-      description: Submit a new energy generation forecast.
+      summary: Sends a energy generation or consumption forecast.
+      description: Submit a new energy generation or consumption forecast.
       requestBody:
         content:
           'application/json':
@@ -58,12 +58,12 @@ paths:
       security:
       - Bearer: []
       
-  /gen-forecasts/{forecastId}:
+  /forecasts/{forecastId}:
     put:
       tags:
       - Forecasting
-      summary: Updates an energy generation forecast.
-      description: Submit an update to an existing energy generation forecast.
+      summary: Updates an energy generation or consumption forecast.
+      description: Submit an update to an existing energy generation or consumption forecast.
       parameters:
         - name: forecastId
           in: path
@@ -92,67 +92,6 @@ paths:
       security:
       - Bearer: []
       
-  
-  /load-forecasts:
-    post:
-      tags:
-      - Forecasting
-      summary: Sends a energy usage forecast.
-      description: Submit a new energy usage forecast.
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/GenOrLoadForecast'
-        required: false
-      responses:
-        201:
-          description: Gen forecast updated successfully.
-          content: 
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/GenOrLoadForecastResponse'
-        403:
-          description: Unauthorized.
-          content: {}
-        500:
-          description: Backend error.
-          content: {}
-      security:
-      - Bearer: []
-  /load-forecasts/{forecastId}:
-    put:
-      tags:
-      - Forecasting
-      summary: Updates an energy usage forecast.
-      description: Submit an update to an existing energy usage forecast.
-      parameters:
-        - name: forecastId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/GenOrLoadForecast'
-        required: false
-      responses:
-        201:
-          description: Load forecast submitted successfully.
-          content: 
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/GenOrLoadForecastResponse'
-        403:
-          description: Unauthorized.
-          content: {}
-        500:
-          description: Backend error.
-          content: {}
-      security:
-      - Bearer: []
 
   /balances:
     get:
