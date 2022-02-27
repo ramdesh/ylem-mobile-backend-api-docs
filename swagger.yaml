@@ -165,15 +165,15 @@ components:
           items:
             type: object
             properties:
-              startTime: 
+              x: 
                 type: string
-                description: Start time for device usage.
-              endTime:
+                description: X parameter for device usage. For example, for a clothes iron, this may be a start time, while for a water heater it could be the time that water is expected to be heated by.
+              y:
                 type: string
-                description: End time for device usage.
-              powerLevel: 
-                type: integer
-                description: Power in kW that the device is going to be used at.
+                description: Y parameter for device usage. For example, for a clothes iron this may be an end time, while for a water heater it could be the temperature the water is expected to be heated to. 
+              z: 
+                type: string
+                description: Z parameter for device usage. For example, for a clothes iron this be the power level. 
     DeviceUsageResponse:
       type: object
       properties:
