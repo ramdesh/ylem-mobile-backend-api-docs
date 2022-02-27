@@ -30,25 +30,25 @@ paths:
         500:
           description: Backend error.
           content: {}
-  /forecasts:
+  /devices:
     post:
       tags:
-      - Forecasting
-      summary: Sends a energy generation or consumption forecast.
-      description: Submit a new energy generation or consumption forecast.
+      - Devices
+      summary: Creates a new device instance.
+      description: Create a new device instance.
       requestBody:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/GenOrLoadForecast'
+              $ref: '#/components/schemas/DeviceInstance'
         required: false
       responses:
         201:
-          description: Gen forecast submitted successfully.
+          description: Device created.
           content: 
             'application/json':
               schema:
-                $ref: '#/components/schemas/GenOrLoadForecastResponse'
+                $ref: '#/components/schemas/DeviceInstanceResponse'
         403:
           description: Unauthorized.
           content: {}
@@ -58,14 +58,14 @@ paths:
       security:
       - Bearer: []
       
-  /forecasts/{forecastId}:
-    put:
+  /devices/{deviceId}/device-usage-metrics:
+    post:
       tags:
-      - Forecasting
-      summary: Updates an energy generation or consumption forecast.
-      description: Submit an update to an existing energy generation or consumption forecast.
+      - Devices
+      summary: Submits expected usage pattern or performance target for device.
+      description: Submit expected usage pattern for device. e.g. a clothes iron may be used from 7pm - 8pm at 1.5kW. A water heater could be expected to heat water to 80 degrees by 6am. These can both be considered inputs for this API endpoint. The timegrid array is generalized to accept objects with parameters as required by the particular device's function.
       parameters:
-        - name: forecastId
+        - name: deviceId
           in: path
           required: true
           schema:
@@ -74,15 +74,15 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/GenOrLoadForecast'
+              $ref: '#/components/schemas/DeviceUsageInformation'
         required: false
       responses:
         201:
-          description: Gen forecast submitted successfully.
+          description: Device usage pattern submitted.
           content: 
             'application/json':
               schema:
-                $ref: '#/components/schemas/GenOrLoadForecastResponse'
+                $ref: '#/components/schemas/DeviceUsageResponse'
         403:
           description: Unauthorized.
           content: {}
@@ -91,6 +91,7 @@ paths:
           content: {}
       security:
       - Bearer: []
+      
       
 
   /users/{userId}/balance:
@@ -138,35 +139,61 @@ components:
         authToken:
           type: string
           description: Authorization Token.
-    GenOrLoadForecast:
+    DeviceInstance:
       type: object
       properties:
-        forecastType:
+        deviceTypeId:
           type: string
-          description: Forecast type.
-          enum:
-           - GEN
-           - LOAD
-        timeslot:
-          type: string
-          description: Timeslot the energy is being generated for/used in.
-        energyQuantity:
-          type: integer
-    GenOrLoadForecastResponse:
+          description: ID for the device type.
+        extraInformation:
+          type: object
+          description: Extra information related to the device, e.g. wattage (if device is not already present in the database)
+    DeviceInstanceResponse:
       type: object
       properties:
-        forecastType:
+        deviceInstanceId:
           type: string
-          description: Forecast type.
-          enum:
-           - GEN
-           - LOAD
-        forecastId:
+          description: Device ID.
+        deviceTypeId:
           type: string
-          description: Forecast ID.
-        timeslot:
+          description: Device type ID.
+    DeviceUsageInformation:
+      type: object
+      properties:
+        timegrid:
+          type: array
+          items:
+            type: object
+            properties:
+              startTime: 
+                type: string
+                description: Start time for device usage.
+              endTime:
+                type: string
+                description: End time for device usage.
+              powerLevel: 
+                type: integer
+                description: Power in kW that the device is going to be used at.
+    DeviceUsageResponse:
+      type: object
+      properties:
+        deviceUsageId:
           type: string
-          description: Timeslot the energy is being generated for/used in.
+          description: ID of stored device usage information.
+        timegrid:
+          type: array
+          items:
+            type: object
+            properties:
+              x: 
+                type: string
+                description: X parameter for device usage. For example, for a clothes iron, this may be a start time, while for a water heater it could be the time that water is expected to be heated by.
+              y:
+                type: string
+                description: Y parameter for device usage. For example, for a clothes iron this may be an end time, while for a water heater it could be the temperature the water is expected to be heated to. 
+              z: 
+                type: string
+                description: Z parameter for device usage. For example, for a clothes iron this be the power level. 
     FiatBalanceResponse:
       type: object
       properties:
